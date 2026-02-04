@@ -1,62 +1,74 @@
 import {Request, Response} from 'express';
-import {products} from "../data/products";
+import Product from "../models/proudct.model";
 
-
-const GetAllProducts = (req: Request, res: Response) => {
+const GetAllProducts = async (req: Request, res: Response) => {
+    const products = await Product.find();
     res.json(products);
 }
 
-const GetProductById = (req: Request, res: Response) => {
-    const productId = parseInt(req.params.id as string);
-    const product = products.find(p => p.id === productId);
-    if (product) {
-        console.log(product);
-        res.json(product);
-    } else {
-        res.status(404).send('Product not found');
+const GetProductById = async (req: Request, res: Response) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (product) {
+            res.json(product);
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        res.status(500).send('Server error');
     }
 }
 
-const CreateProduct = (req: Request, res: Response) => {
+const CreateProduct = async (req: Request, res: Response) => {
     const newProduct = req.body;
-    const ProductId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-    console.log(newProduct);
-    products.push({id: ProductId, ...newProduct});
-    res.status(201).json(newProduct);
+    const product = new Product(newProduct);
+    await product.save();
+    res.status(201).json(product);
 }
 
-const ReplaceProduct = (req: Request, res: Response) => {
-    const productId = parseInt(req.params.id as string);
-    const updatedProduct = req.body;
-    const index = products.findIndex(p => p.id === productId);
-    if (index !== -1) {
-        products[index] = { id: productId, ...updatedProduct };
-        res.json(updatedProduct);
-    } else {
-        res.status(404).send('Product not found');
+const ReplaceProduct = async (req: Request, res: Response) => {
+    try {
+        const updatedProduct = req.body;
+        const product = await Product.findByIdAndUpdate(req.params.id, updatedProduct, { new: true, overwrite: true });
+        if (product) {
+            res.json(product);
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        res.status(500).send('Server error');
     }
 }
 
-const UpdateProduct = (req: Request, res: Response) => {
-    const productId = parseInt(req.params.id as string);
-    const updatedFields = req.body;
-    const product = products.find(p => p.id === productId);
-    if (product) {
-        Object.assign(product, updatedFields);
-        res.json(product);
-    } else {
-        res.status(404).send('Product not found');
+const UpdateProduct = async (req: Request, res: Response) => {
+    try {
+        const updatedFields = req.body;
+        const product = await Product.findByIdAndUpdate(
+            req.params.id,
+            updatedFields,
+            { new: true, runValidators: true }
+        );
+        if (product) {
+            res.json(product);
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        res.status(500).send('Server error');
     }
 }
 
-const DeleteProduct = (req: Request, res:Response) => {
-    const productId = parseInt(req.params.id as string);
-    const index = products.findIndex(p => p.id === productId);
-    if (index === -1) {
-        return res.status(404).send('Product not found');
+const DeleteProduct = async (req: Request, res:Response) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (product) {
+            res.status(204).send();
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        res.status(500).send('Server error');
     }
-    products.splice(index, 1);
-    res.status(204).send();
 }
 
 export default {
