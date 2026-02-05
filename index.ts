@@ -1,11 +1,14 @@
 import express from 'express';
 import mongoose from "mongoose";
 import productsRouter from './routes/products.route';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = 3000;
 
-mongoose.connect('mongodb+srv://Hatoom:jytwiw-1sakFu-jydtow@cluster0.17yy5ai.mongodb.net/products-db')
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/productsdb', {})
     .then(() => {
         console.log('Connected to MongoDB');
     })
