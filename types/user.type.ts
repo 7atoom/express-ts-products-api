@@ -5,7 +5,7 @@ export interface IUser {
     Lname: string;
     email: string;
     password: string;
-    token: string;
+    comparePassword(providedPassword: string): Promise<boolean>;
 }
 
 export interface IUserDocument extends IUser, Document {

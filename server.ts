@@ -1,16 +1,6 @@
-import express from 'express';
-import productsRouter from './routes/products.route';
-import { env } from './config/env';
-import {connectDB} from "./config/db";
-import {errorHandler, notFoundHandler} from "./middlewares/error.middleware";
-
-const app = express();
-
-app.use(express.json());
-app.use('/api/products', productsRouter);
-
-app.use(notFoundHandler);
-app.use(errorHandler);
+import { env } from "./config/env";
+import { connectDB } from "./config/db";
+import app from "./app";
 
 const startServer = async () => {
     try {
