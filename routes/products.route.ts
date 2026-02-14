@@ -6,13 +6,13 @@ import { authenticate } from "../middlewares/auth.middleware";
 const router = express.Router();
 
 router.route('/')
-    .get(authenticate, ProductsController.GetAllProducts)
-    .post(authenticate, validateProduct, ProductsController.CreateProduct);
+    .get(ProductsController.GetAllProducts)
+    .post(validateProduct, ProductsController.CreateProduct);
 
 router.route('/:id')
-    .get(authenticate, ProductsController.GetProductById)
-    .patch(authenticate, validatePartialProduct, ProductsController.UpdateProduct)
-    .put(authenticate, validateProduct, ProductsController.UpdateProduct)
-    .delete(authenticate, ProductsController.DeleteProduct);
+    .get(ProductsController.GetProductById)
+    .patch(validatePartialProduct, ProductsController.UpdateProduct)
+    .put(validateProduct, ProductsController.UpdateProduct)
+    .delete(ProductsController.DeleteProduct);
 
 export default router;

@@ -10,9 +10,10 @@ app.use(express.json());
 // Security middlewares
 app.use(helmet());
 app.use(cors({
-    origin: 'http://localhost:3000', // Adjust this to your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+  origin: 'http://localhost:4200', // Angular app URL
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

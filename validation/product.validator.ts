@@ -17,8 +17,8 @@ export const validateProduct = [
   body("category")
     .notEmpty()
     .withMessage("Category is required")
-    .isString()
-    .withMessage("Category must be a string"),
+    .isMongoId()
+    .withMessage("Category must be a valid MongoDB ObjectId"),
   body("supplier")
     .notEmpty()
     .withMessage("Supplier is required")
@@ -32,8 +32,8 @@ export const validateProduct = [
   body("quantity")
     .notEmpty()
     .withMessage("Quantity is required")
-    .isInt({ gt: 0 })
-    .withMessage("Quantity must be an integer greater than 0"),
+    .isInt({ gt: -1 })
+    .withMessage("Quantity must be an integer greater than or equal to 0"),
   body("minStock")
     .notEmpty()
     .withMessage("Minimum stock is required")
@@ -80,8 +80,8 @@ export const validatePartialProduct = [
     .withMessage("Product code must be a string"),
   body("category")
     .optional()
-    .isString()
-    .withMessage("Category must be a string"),
+    .isMongoId()
+    .withMessage("Category must be a valid MongoDB ObjectId"),
   body("supplier")
     .optional()
     .isString()
@@ -92,8 +92,8 @@ export const validatePartialProduct = [
     .withMessage("Description must be a string"),
   body("quantity")
     .optional()
-    .isInt({ gt: 0 })
-    .withMessage("Quantity must be an integer greater than 0"),
+    .isInt({ gt: -1 })
+    .withMessage("Quantity must be an integer greater than or equal to 0"),
   body("minStock")
     .optional()
     .isInt({ gt: 0 })
